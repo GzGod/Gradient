@@ -20,27 +20,27 @@ banner = """
 print(banner)
 time.sleep(1)
 
-# Logger configuration
+# 日志配置
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 logger = logging.getLogger()
 
-# Load proxies from file
+# 从文件加载代理
 PROXY_FILE = "proxies.txt"
 ACTIVE_PROXY_FILE = "checked_proxies.txt"
 
 def load_proxies(file_path):
-    """Load proxies from a file."""
+    """从文件加载代理。"""
     with open(file_path, "r") as f:
         proxies = [line.strip() for line in f if line.strip()]
     return proxies
 
 def save_active_proxies(proxies):
-    """Save active proxies to a file."""
+    """将活动代理保存到文件。"""
     with open(ACTIVE_PROXY_FILE, "w") as f:
         f.writelines(f"{proxy}\n" for proxy in proxies)
 
 def check_proxy(proxy):
-    """Check if a proxy can connect to a target URL."""
+    """检查代理是否可以连接到目标URL。"""
     target_url = "https://app.gradient.network/"  
     try:
         response = requests.get(
@@ -49,45 +49,45 @@ def check_proxy(proxy):
             timeout=10
         )
         if response.status_code == 200:
-            logger.info(f"Proxy {proxy} is active")
+            logger.info(f"代理 {proxy} 是活动的")
             return proxy
     except Exception as e:
-        logger.warning(f"Proxy {proxy} failed: {e}")
+        logger.warning(f"代理 {proxy} 失败: {e}")
     return None
 
 def run_proxy_checker(proxies):
-    """Run proxy checker for a list of proxies."""
-    logger.info("Starting proxy checker...")
-    active_proxies = []
-    with ThreadPoolExecutor(max_workers=10) as executor:  # Atur jumlah thread sesuai kebutuhan
+    """运行代理检查器以检查代理列表。"""
+    logger.info("启动代理检查器...")
+    活动代理 = []
+    with ThreadPoolExecutor(max_workers=10) as executor:  # 根据需要设置线程数
         futures = {executor.submit(check_proxy, proxy): proxy for proxy in proxies}
         for future in as_completed(futures):
             result = future.result()
             if result:
-                active_proxies.append(result)
-    logger.info(f"Active proxies found: {len(active_proxies)}")
-    return active_proxies
+                活动代理.append(result)
+    logger.info(f"找到的活动代理: {len(活动代理)}")
+    return 活动代理
 
 def main():
-    """Main function to run proxy checker and execute bot tasks."""
-    # Load proxies
-    proxies = load_proxies(PROXY_FILE)
-    if not proxies:
-        logger.error(f"No proxies found in {PROXY_FILE}")
+    """运行代理检查器和执行机器人任务的主函数。"""
+    # 加载代理
+    代理 = load_proxies(PROXY_FILE)
+    if not 代理:
+        logger.error(f"在 {PROXY_FILE} 中未找到代理")
         return
 
-    # Check proxies
-    active_proxies = run_proxy_checker(proxies)
-    if not active_proxies:
-        logger.error("No active proxies found. Exiting...")
+    # 检查代理
+    活动代理 = run_proxy_checker(代理)
+    if not 活动代理:
+        logger.error("未找到活动代理。退出...")
         return
 
-    # Save active proxies
-    save_active_proxies(active_proxies)
-    logger.info(f"Active proxies saved to {ACTIVE_PROXY_FILE}")
+    # 保存活动代理
+    save_active_proxies(活动代理)
+    logger.info(f"活动代理已保存到 {ACTIVE_PROXY_FILE}")
 
-    # Run main bot with active proxies
-    logger.info("Starting bot execution with active proxies...")
+    # 使用活动代理启动主机器人
+    logger.info("使用活动代理启动机器人执行...")
 
 if __name__ == "__main__":
     main()

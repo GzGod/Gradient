@@ -6,7 +6,7 @@
 
 - 通过电子邮件注册: [*Gradient*](https://app.gradient.network/signup?code=YWT3BK)
 
-## 加入我们
+## TG群组
 
 [*撸毛频道*](https://t.me/+FZHZVA_gEOJhOWM1)
 [*土狗频道*](https://t.me/+0X5At4YG0_k0ZThl)
